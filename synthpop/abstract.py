@@ -21,8 +21,8 @@ class AbstractModel(ABC):
     def observe(self, *args, **kwargs):
         pass
 
-    def __call__(self):
-        return self.run()
+    def __call__(self, generator):
+        return self.run(generator)
 
 class AbstractGenerator(ABC):
     def __init__(self, *args, **kwargs):

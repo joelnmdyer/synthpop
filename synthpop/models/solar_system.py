@@ -20,7 +20,7 @@ class ODE(torch.nn.Module):
         return torch.cat([x[:, [2,3]], a], dim=1)
 
 class SolarSystem(AbstractModel):
-    def __init__(self, generator, n_agents, t_final, n_timesteps):
+    def __init__(self, n_agents, t_final, n_timesteps):
         """
         Model representing a solar system where the planets are the agents orbiting the sun.
 
@@ -30,15 +30,14 @@ class SolarSystem(AbstractModel):
         The output of the generator should be a tensor of shape (n_agents, 4), where
         the columns represent [x, y, vx, vy] in AU and 3e4 km /s units.
         """
-        self.generator = generator
         self.n_agents = n_agents
         self.x = None
         self.t_final = t_final * DAY
         self.n_timesteps = n_timesteps
         self.t_range = torch.linspace(0, self.t_final, n_timesteps)
 
-    def initialize(self):
-        x = self.generator(self.n_agents)
+    def initialize(self, generator):
+        x = generator(self.n_agents)
         # convert x from AU to meters
         x[:, [0,1]] *= AU
         # convert v from orb vel to m/s
@@ -48,10 +47,11 @@ class SolarSystem(AbstractModel):
     def step(self):
         pass
 
-    def run(self):
-        x = self.initialize()
-        x = torchdiffeq.odeint(ODE(), x, self.t_range)
-        return x
-
     def observe(self, x):
         return [x[:,:, [0,1]] / AU]
+
+    def run(self, generator):
+        x = self.initialize(generator)
+        x = self.observe(torchdiffeq.odeint(ODE(), x, self.t_range))
+        return x
+
