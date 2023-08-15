@@ -163,3 +163,5 @@ cython_debug/
 **/*gif
 **/.DS_Store
 .vscode
+**/*pt
+**/*Manifest.toml

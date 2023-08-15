@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from ..abstract import AbstractModel, AbstractMetaGenerator
 
 from .smcabc import smcabc
+from .vi import vi
 
 
 class Infer:
@@ -32,7 +33,7 @@ class Infer:
         self.loss = loss
         self.prior = prior
 
-    def fit(self, method: dataclass, num_workers: int =-1):
+    def fit(self, method: dataclass, **kwargs):
         """
         Fit the model to the data using the given method.
 
@@ -50,7 +51,16 @@ class Infer:
                 loss=self.loss,
                 prior=self.prior,
                 parameters=method,
-                num_workers=num_workers,
+                **kwargs
+            )
+        elif method_name == "VI":
+            return vi(
+                model=self.model,
+                meta_generator=self.meta_generator,
+                loss=self.loss,
+                prior=self.prior,
+                parameters=method,
+                **kwargs
             )
         else:
             raise NotImplementedError(f"Method {method_name} not implemented.")

@@ -76,7 +76,7 @@ and then we can choose the method we would like to the inference, in this case `
 
 ```python
 from synthpop.infer import SMCABC
-infer_method = SMCABC(num_particles = 1_000, num_initial_pop=5_000, num_simulations=10_000, epsilon_decay=1.0)
+infer_method = SMCABC(num_particles = 100, num_initial_pop=5_000, num_simulations=10_000, epsilon_decay=1.0)
 trained_meta_generator = infer.fit(infer_method, num_workers=-1)
 ```
 
