@@ -19,7 +19,7 @@ class VI:
     log_tensorboard: bool = False
     tensorboard_log_dir: str | None = None
 
-def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_without_improvement = np.inf):
+def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_without_improvement = np.inf, **kwargs):
     def _loss(params, _):
         generator = meta_generator(params)
         x = model(generator)
