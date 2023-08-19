@@ -25,8 +25,8 @@ end
     xlabel --> "x"
     yguide --> "y"
     aspect_ratio := :equal
-    xlims := (-250, 250)
-    ylims := (-250, 250)
+    xlims := (-100, 100)
+    ylims := (-100, 100)
     
     @series begin
         # force an argument with `:=`

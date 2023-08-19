@@ -166,3 +166,6 @@ cython_debug/
 **/*pt
 **/*Manifest.toml
 **/*events.out.tfevents.*
+notebooks/positions.npy
+**/*.npy
+**/*.mp4
