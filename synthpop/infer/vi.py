@@ -23,7 +23,10 @@ def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_with
     def _loss(params, _):
         generator = meta_generator(params)
         x = model(generator)
-        return loss(x)
+        l = loss(x)
+        if type(l) != torch.Tensor:
+            l = torch.tensor(l)
+        return l
 
     vi = bb_infer.VI(
         loss=_loss,
@@ -44,6 +47,7 @@ def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_with
         tensorboard_log_dir=parameters.tensorboard_log_dir,
     )
     vi.run(None, n_epochs=n_epochs, max_epochs_without_improvement=max_epochs_without_improvement)
+    meta_generator.load_state_dict(vi.best_estimator_state_dict)
     return meta_generator
 
 

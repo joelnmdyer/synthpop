@@ -18,11 +18,23 @@ Main.eval("using Pkg")
 Main.eval(f"Pkg.activate(\"{env_path}\")")
 
 
-run_script_jl = """using FlockingModel
+run_script_jl = """using FlockingModel, Plots
 function run_flocking_model(n, k, pos, vel, speed, factors, radii; time_steps)
     factor_fns = [avoid_direction, stubborn_direction, sep_direction, cohere_direction, match_direction]
     model = BoidModel(n, k, pos, vel, speed, factors, radii)
     run!(model, time_steps, factor_fns)
+end
+function plot_positions(positions, velocities, save_path)
+    n_timesteps = size(positions)[3]
+    n_agents = size(positions)[1]
+    k = 5
+    anim = @animate for i in 1:n_timesteps
+        bird_pos = positions[:, :, i]
+        bird_vel = velocities[:, :, i]
+        model = BoidModel(n_agents, k, bird_pos, bird_vel, zeros(1), zeros(1), zeros(1))
+        plot(model)
+    end
+    gif(anim, save_path, fps = 24)
 end
 """
 logger.info("Pre-compiling FlockingModel...")
@@ -57,6 +69,10 @@ class FlockingModel(AbstractModel):
             time_steps=self.n_timesteps,
         )
         return [pos_hist, vel_hist]
+
+    def plot(self, positions, velocities, save_path = "birds.gif"):
+        return Main.plot_positions(positions, velocities, save_path)
+
 
 if __name__ == "__main__":
     import numpy as np

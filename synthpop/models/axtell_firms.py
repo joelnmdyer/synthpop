@@ -124,7 +124,7 @@ class AxtellModel(AbstractModel):
     def __init__(self, max_time=1., v=1, N=1000, ):
 
         self._max_time = max_time
-        self._N = N
+        self.n_agents = N
         self._v = min([v, int(N / 2)])
 
     def initialize(self):
@@ -137,8 +137,8 @@ class AxtellModel(AbstractModel):
         return x
 
     def run(self, generator):
-        es, ths, phs, beta, a, b = generator(self._N)
-        a2f = np.arange(self._N)
+        es, ths, phs, beta, a, b = generator(self.n_agents)
+        a2f = np.arange(self.n_agents)
         return _simulate(a2f, es, ths, phs, self._max_time, a, b, beta, self._v)
         
     def _reconstruct(self, last_a2prop, agent, entry):

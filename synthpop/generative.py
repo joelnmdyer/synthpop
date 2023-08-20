@@ -1,6 +1,10 @@
 import torch
 import normflows as nf
 
+class SampleGenerator(torch.nn.Module):
+    def forward(self, generator_params):
+        raise NotImplementedError
+
 class MultivariateNormal(torch.nn.Module):
     def __init__(self, mean, sqrt_cov):
         super().__init__()

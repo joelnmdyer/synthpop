@@ -25,8 +25,8 @@ end
     xlabel --> "x"
     yguide --> "y"
     aspect_ratio := :equal
-    xlims := (-100, 100)
-    ylims := (-100, 100)
+    xlims := (-250, 250)
+    ylims := (-250, 250)
     
     @series begin
         # force an argument with `:=`
@@ -35,6 +35,7 @@ end
         primary := false
         # ensure no markers are shown for the error band
         markershape := markers
+        markercolor := "black"
         # return series data
         model.pos[:, 1], model.pos[:, 2]
     end

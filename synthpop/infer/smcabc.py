@@ -38,11 +38,13 @@ def smcabc(model, meta_generator, loss, prior, parameters, num_workers=-1):
     """
     Performs SMCABC inference using the SBI pckage.
     """
+    def loss_wrapper(x):
+        return loss(x).reshape(1,1)
 
     def simulator(theta):
         generator = meta_generator(theta)
         x = model(generator)
-        return loss(x)
+        return loss_wrapper(x)
 
     def distance(y, x):
         return x.reshape(-1)
