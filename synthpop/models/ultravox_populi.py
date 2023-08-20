@@ -1,4 +1,5 @@
 from numba import njit
+import warnings
 import networkx as nx
 import numpy as np
 from tqdm import tqdm
@@ -72,7 +73,9 @@ class UltravoxPopuli(AbstractModel):
 
         def generator(n_agents):
             # Draw initial opinions
-            os = (np.random.random(size=n_agents) < r).astype(int)
+            #os = np.random.beta(alpha_os, beta_os, size=n_agents)
+            os = np.random.binomial(1, r, n_agents)
+            #os = (np.random.random(size=n_agents) < r).astype(int)
             # Draw malleabilities
             mus = np.random.beta(alpha_mu, beta_mu, size=n_agents)
             gams = np.random.beta(alpha_gamma, beta_gamma, size=n_agents)
@@ -81,16 +84,18 @@ class UltravoxPopuli(AbstractModel):
         return generator
 
     def run(self, generator):
-        os, mus, gams, m = generator(self.n_agents)
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            os, mus, gams, m = generator(self.n_agents)
 
-        graph = nx.generators.barabasi_albert_graph(self.n_agents, int(m))
-        each_agents_neighbours = [
-            np.array([nbr for nbr in graph.neighbors(i)]) for i in range(self.n_agents)
-        ]
-        x = [os.copy()] + _simulate(
-            os, mus, gams, each_agents_neighbours, self.n_timesteps, self.n_agents
-        )
-        return self.observe(x)
+            graph = nx.generators.barabasi_albert_graph(self.n_agents, int(m))
+            each_agents_neighbours = [
+                np.array([nbr for nbr in graph.neighbors(i)]) for i in range(self.n_agents)
+            ]
+            x = [os.copy()] + _simulate(
+                os, mus, gams, each_agents_neighbours, self.n_timesteps, self.n_agents
+            )
+            return self.observe(x)
 
     def reconstruct_opinions(self, last_opinions, agent, opinion):
         last_opinions[agent] = opinion
