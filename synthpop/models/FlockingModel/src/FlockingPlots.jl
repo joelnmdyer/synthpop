@@ -1,4 +1,5 @@
 using Plots
+PLOT_LIM = 500
 
 # Utility functions to help with plotting
 function angle_of_travel(vel)
@@ -25,8 +26,8 @@ end
     xlabel --> "x"
     yguide --> "y"
     aspect_ratio := :equal
-    xlims := (-250, 250)
-    ylims := (-250, 250)
+    xlims := (-PLOT_LIM, PLOT_LIM)
+    ylims := (-PLOT_LIM, PLOT_LIM)
     
     @series begin
         # force an argument with `:=`

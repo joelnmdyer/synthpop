@@ -24,7 +24,8 @@ function run_flocking_model(n, k, pos, vel, speed, factors, radii; time_steps)
     model = BoidModel(n, k, pos, vel, speed, factors, radii)
     run!(model, time_steps, factor_fns)
 end
-function plot_positions(positions, velocities, save_path)
+function plot_positions(positions, velocities, save_path, plot_lim)
+    FlockingModel.PLOT_LIM = plot_lim
     n_timesteps = size(positions)[3]
     n_agents = size(positions)[1]
     k = 5
@@ -70,8 +71,8 @@ class FlockingModel(AbstractModel):
         )
         return [pos_hist, vel_hist]
 
-    def plot(self, positions, velocities, save_path = "birds.gif"):
-        return Main.plot_positions(positions, velocities, save_path)
+    def plot(self, positions, velocities, save_path = "birds.gif", plot_lim=500):
+        return Main.plot_positions(positions, velocities, save_path, plot_lim)
 
 
 if __name__ == "__main__":

@@ -5,6 +5,24 @@ class SampleGenerator(torch.nn.Module):
     def forward(self, generator_params):
         raise NotImplementedError
 
+class DiracDelta(torch.nn.Module):
+    def __init__(self, parameter_priors):
+        super().__init__()
+        self.__parameters = torch.nn.Parameter(parameter_priors)
+
+    def sample(self, n_samples):
+        samples = self.__parameters.repeat(n_samples, 1)
+        return samples, self.log_prob(samples)
+
+    def log_prob(self, x):
+        # approximate by very thing gaussian
+        return torch.distributions.Normal(self.__parameters, 1e-2 * torch.ones_like(self.__parameters)).log_prob(x).sum(-1)
+
+    def forward(self, generator_params):
+        raise NotImplementedError
+    
+
+
 class MultivariateNormal(torch.nn.Module):
     def __init__(self, mean, sqrt_cov):
         super().__init__()
