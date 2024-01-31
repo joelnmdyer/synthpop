@@ -6,7 +6,7 @@ import numpy as np
 
 
 @dataclass
-class SMCABC:
+class TBS_SMC:
     num_particles: int
     num_initial_pop: int
     num_simulations: int
@@ -34,7 +34,7 @@ def _generate_fitted_meta_generator(meta_generator, samples):
             return meta_generator(random_sample)
     return MetaGenerator(samples)
 
-def smcabc(model, meta_generator, loss, prior, parameters, num_workers=-1):
+def tbs_smc(model, meta_generator, loss, prior, parameters, num_workers=-1):
     """
     Performs SMCABC inference using the SBI pckage.
     """

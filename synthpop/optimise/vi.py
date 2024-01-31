@@ -1,10 +1,10 @@
 from dataclasses import dataclass
-from blackbirds import infer as bb_infer
+from blackbirds import infer as bb_optimise
 import numpy as np
 import torch
 
 @dataclass
-class VI:
+class VO:
     w: float
     optimizer: torch.optim.Optimizer
     gradient_clipping_norm: float = np.inf
@@ -19,7 +19,7 @@ class VI:
     log_tensorboard: bool = False
     tensorboard_log_dir: str | None = None
 
-def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_without_improvement = np.inf, **kwargs):
+def vo(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_without_improvement = np.inf, **kwargs):
     def _loss(params, _):
         generator = meta_generator(params)
         x = model(generator)
@@ -28,7 +28,7 @@ def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_with
             l = torch.tensor(l)
         return l
 
-    vi = bb_infer.VI(
+    vo = bb_optimise.VI(
         loss=_loss,
         posterior_estimator=meta_generator,
         prior=prior,
@@ -46,8 +46,8 @@ def vi(model, meta_generator, loss, prior, parameters, n_epochs, max_epochs_with
         progress_info=parameters.progress_info,
         tensorboard_log_dir=parameters.tensorboard_log_dir,
     )
-    vi.run(None, n_epochs=n_epochs, max_epochs_without_improvement=max_epochs_without_improvement)
-    meta_generator.load_state_dict(vi.best_estimator_state_dict)
+    vo.run(None, n_epochs=n_epochs, max_epochs_without_improvement=max_epochs_without_improvement)
+    meta_generator.load_state_dict(vo.best_estimator_state_dict)
     return meta_generator
 
 

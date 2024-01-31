@@ -4,11 +4,11 @@ from dataclasses import dataclass
 
 from ..abstract import AbstractModel, AbstractMetaGenerator
 
-from .smcabc import smcabc
-from .vi import vi
+from .tbs_smc import tbs_smc as tbs_smc
+from .vi import vi as vo
 
 
-class Infer:
+class Optimise:
     def __init__(
         self,
         model: AbstractModel,
@@ -17,14 +17,14 @@ class Infer:
         prior: torch.distributions.Distribution,
     ):
         """
-        General class to perform inference over the MetaGenerator parameters.
+        General class to optimise over the MetaGenerator parameters.
 
         **Arguments:**
 
-        - `model`: Simulation model, must take a parameter vector theta, and output a list of outputs that
+        - `model`: Simulation model, must take a structural parameter vector omega, and output a list of outputs that
         is compatible with the input of the loss function.
         - `meta_generator`: Object that generates attribute distributions for the simulator. Must be callable by
-        passing a set of parameters and outputing a distribution that can be taken by the model as input.
+        passing a set of population-level parameters theta and outputing a distribution that can be taken by the model as input.
         - `loss`: Loss function that takes the output of the model and the target data and outputs a scalar, representing
         how well the model has generated the desired scenario.
         """
@@ -44,8 +44,8 @@ class Infer:
         number of available CPUs.
         """
         method_name = method.__class__.__name__
-        if method_name == "SMCABC":
-            return smcabc(
+        if method_name == "TBS-SMC":
+            return tbs_smc(
                 model=self.model,
                 meta_generator=self.meta_generator,
                 loss=self.loss,
@@ -53,8 +53,8 @@ class Infer:
                 parameters=method,
                 **kwargs
             )
-        elif method_name == "VI":
-            return vi(
+        elif method_name == "VO":
+            return vo(
                 model=self.model,
                 meta_generator=self.meta_generator,
                 loss=self.loss,
