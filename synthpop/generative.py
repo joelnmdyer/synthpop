@@ -6,6 +6,7 @@ class SampleGenerator(torch.nn.Module):
     def forward(self, generator_params):
         raise NotImplementedError
 
+
 class DiracDelta(torch.nn.Module):
     def __init__(self, parameter_priors):
         super().__init__()
@@ -21,7 +22,6 @@ class DiracDelta(torch.nn.Module):
 
     def forward(self, generator_params):
         raise NotImplementedError
-    
 
 
 class MultivariateNormal(torch.nn.Module):
@@ -49,29 +49,12 @@ class MultivariateNormal(torch.nn.Module):
     def forward(self, generator_params):
         raise NotImplementedError
 
-#class Sigmoid(nf.flows.Flow):
-#    def __init__(self, min_values, max_values):
-#        super().__init__()
-#        self.min_values = min_values
-#        self.max_values = max_values
-#
-#    def forward(self, z):
-#        sim = torch.sigmoid(z)
-#        zz = self.min_values + (self.max_values - self.min_values) * sim
-#        log_det = sum(np.abs(b-a) for (a, b) in zip(self.min_values, self.max_values)) 
-#        log_det += torch.sum(torch.log(torch.abs(torch.exp(-z) / (1 + torch.exp(-z))**2)))
-#        return zz, log_det
-#
-#    def inverse(self, z):
-#        x = torch.log((z - self.min_values) / (self.max_values - z))
-#        log_det = torch.sum(torch.log(torch.abs((self.max_values - self.min_values) / (self.max_values - z) * (z / (z - self.min_values)))))
-#        return x, log_det
+
 class Sigmoid(nf.flows.Flow):
     def __init__(self, min_values, max_values):
         super().__init__()
         self.min_values = min_values
         self.max_values = max_values
-
 
     def inverse(self, z):
         logz = torch.log(z - self.min_values)
@@ -92,6 +75,7 @@ class Sigmoid(nf.flows.Flow):
         log_det = ls + mls + lls
         z = self.min_values + (self.max_values - self.min_values) * torch.sigmoid(z)
         return z, log_det
+
 
 class MaskedAutoRegressiveFlow(torch.nn.Module):
     def __init__(self, n_parameters, n_hidden_units, n_transforms, min_values, max_values):
