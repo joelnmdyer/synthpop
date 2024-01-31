@@ -1,3 +1,4 @@
+blackbirds==1.2
 numba==0.56
 numpy
 sbi==0.21.0
