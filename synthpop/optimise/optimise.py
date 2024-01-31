@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from ..abstract import AbstractModel, AbstractMetaGenerator
 
 from .tbs_smc import tbs_smc
-from .vi import vo
+from .vo import vo
 
 
 class Optimise:
@@ -44,7 +44,7 @@ class Optimise:
         number of available CPUs.
         """
         method_name = method.__class__.__name__
-        if method_name == "TBS-SMC":
+        if method_name == "TBS_SMC":
             return tbs_smc(
                 model=self.model,
                 meta_generator=self.meta_generator,
