@@ -1,4 +1,4 @@
 numba==0.56
-numpy==1.23
+numpy
 sbi==0.21.0
 torch==2.0
