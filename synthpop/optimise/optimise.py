@@ -4,8 +4,8 @@ from dataclasses import dataclass
 
 from ..abstract import AbstractModel, AbstractMetaGenerator
 
-from .tbs_smc import tbs_smc as tbs_smc
-from .vi import vi as vo
+from .tbs_smc import tbs_smc
+from .vi import vo
 
 
 class Optimise:
