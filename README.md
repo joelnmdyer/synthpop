@@ -1,4 +1,4 @@
-# Population synthesis as sceneario generation
+# Population synthesis as scenario generation
 
 # 1. Installation
 
@@ -12,7 +12,7 @@ You can view the docs [here](https://github.com/joelnmdyer/synthpop/tree/main/no
 
 # 4. Citation
 
-This package accompanies our [AAMAS 2024](https://www.aamas2024-conference.auckland.ac.nz) paper on [Population synthesis as scenario generation](https://ora.ox.ac.uk/objects/uuid:87663b7f-60ca-44f3-8fa5-b9fd501e6270/download_file?file_format=application%2Fpdf&safe_filename=Dyer_et_al_2023_Population_synthesis_as.pdf&type_of_work=Conference+item) in agent-based models, with the aim of facilitating simulation-based planning under uncertainty. You can cite our paper and/or package using the following citation:
+This package accompanies our [AAMAS 2024](https://www.aamas2024-conference.auckland.ac.nz) paper on [Population synthesis as scenario generation](https://ora.ox.ac.uk/objects/uuid:87663b7f-60ca-44f3-8fa5-b9fd501e6270/download_file?file_format=application%2Fpdf&safe_filename=Dyer_et_al_2023_Population_synthesis_as.pdf&type_of_work=Conference+item) in agent-based models, with the aim of facilitating simulation-based planning under uncertainty. You can cite our paper and/or package using the following:
 
 ```
 @inproceedings{dyer2023a,
