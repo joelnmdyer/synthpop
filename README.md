@@ -2,6 +2,7 @@
 
 # 1. Installation
 
+To install the package, clone the repository and run:
 ```
 pip install synthpop
 ```
