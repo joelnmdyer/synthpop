@@ -65,6 +65,8 @@ class Normals(AbstractModel):
             return self.observe(xs)
 ```
 
+## 3.2 Specifying the loss function
+
 We also specify the loss function:
 
 ```
@@ -75,6 +77,10 @@ def loss(x):
     return z
 ```
 
+## 3.3 Wrapping the agent attribute generator
+
+
+
 ```
 class AgentAttributeDistributionGenerator(SampleGenerator):
     def forward(self, generator_params):
@@ -84,7 +90,9 @@ class AgentAttributeDistributionGenerator(SampleGenerator):
 meta_generator = AgentAttributeDistributionGenerator()
 ```
 
-and finally specify the domain over which we'd like to find such a $q$, and a method for obtaining $q$, before running the optimisation procedure:
+## 3.4 Specify the domain and optimise
+
+Finally, we specify the domain over which we'd like to find such a $q$, and a method for obtaining $q$, before running the optimisation procedure:
 
 ```
 prior = torch.distributions.Uniform(torch.tensor([-20.]), torch.tensor([20.]))
@@ -93,6 +101,10 @@ optimise = Optimise(model=model, meta_generator=meta_generator, prior=prior, los
 optimise_method = TBS_SMC(num_particles=5_000, num_initial_pop=10_000, num_simulations=10_000, epsilon_decay=0.7, return_summary=True)
 trained_meta_generator = optimise.fit(optimise_method, num_workers=-1)
 ```
+## 3.5 Optimising with variational optimisation
+
+The same example, optimised using variational optimisation, can be seen [here](https://github.com/joelnmdyer/synthpop/blob/main/test/test_normals.py).
+
 
 # 4. Citation
 
