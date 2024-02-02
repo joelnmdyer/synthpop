@@ -13,12 +13,86 @@ You can view the docs [here](https://github.com/joelnmdyer/synthpop/tree/main/no
 
 # 3. Example
 
-Consider a population of `N` agents whose states $x_i \sim \mathcal{N}(\mu_i, 1)$, where $\mathcal{N}(\mu, \sigma^2)$ denotes a Normal distribution with mean $\mu$ and variance $\sigma^2$. Consider also generating the agent-level attributes $\mu_i$ from a 
+Consider a population of $N$ agents whose states $x_i \sim \mathcal{N}(\mu_i, 1)$, where $\mathcal{N}(\mu, \sigma^2)$ denotes a Normal distribution with mean $\mu$ and variance $\sigma^2$. Consider also generating the agent-level attributes $\mu_i$ from a 
 distribution $\iota_\mu = \mathcal{N}(\mu, 1)$. We'd like to find a proposal distribution $q$ over the population-level parameter $\mu$ such that the average square 
 
 $$\ell(\mathbf{x}) = \frac{1}{N} \sum_{i=1}^{N} x_i^2$$
 
 of the agent states is small.
+
+## 3.1 Implementing the model
+
+We implement the model for how agent parameters $\mu_i$ are generated given $\mu$, along with the model for how the agent states $x_i$ are forward simulated given their individual $\mu_i$:
+
+```
+import numpy as np
+import warnings
+from ..abstract import AbstractModel
+
+class Normals(AbstractModel):
+    def __init__(self, n_timesteps=1, n_agents=1_000):
+        self.n_timesteps = n_timesteps
+        self.n_agents = n_agents
+
+    def initialize(self):
+        pass
+
+    def step(self, *args, **kwargs):
+        pass
+
+    def observe(self, x):
+        return [x]
+
+    @staticmethod
+    def make_default_generator(params):
+        mu = params
+
+        # Specify how the population parameter \mu parameterises the agent generator
+        def generator(n_agents):
+            # Draw agent parameters from distribution \iota_\mu
+            mus = mu + np.random.normal(size=n_agents)
+            return mus
+
+        return generator
+
+    def run(self, generator):
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            # Generate agent parameters \mu_i
+            mus = generator(self.n_agents)
+            # Simulate model forward to obtain the x_i
+            xs = mus + np.random.normal(size=self.n_agents)
+            return self.observe(xs)
+```
+
+We also specify the loss function:
+
+```
+import torch
+
+def loss(x):
+    z = torch.mean(torch.pow(x[0], 2))
+    return z
+```
+
+```
+class AgentAttributeDistributionGenerator(SampleGenerator):
+    def forward(self, generator_params):
+        mu = generator_params
+        return model.make_default_generator(mu)
+
+meta_generator = AgentAttributeDistributionGenerator()
+```
+
+and finally specify the domain over which we'd like to find such a $q$, and a method for obtaining $q$, before running the optimisation procedure:
+
+```
+prior = torch.distributions.Uniform(torch.tensor([-20.]), torch.tensor([20.]))
+
+optimise = Optimise(model=model, meta_generator=meta_generator, prior=prior, loss=loss)
+optimise_method = TBS_SMC(num_particles=5_000, num_initial_pop=10_000, num_simulations=10_000, epsilon_decay=0.7, return_summary=True)
+trained_meta_generator = optimise.fit(optimise_method, num_workers=-1)
+```
 
 # 4. Citation
 
