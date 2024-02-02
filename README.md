@@ -24,7 +24,7 @@ of the agent states is small.
 
 We implement the model for how agent parameters $\mu_i$ are generated given $\mu$, along with the model for how the agent states $x_i$ are forward simulated given their individual $\mu_i$:
 
-```
+```python
 import numpy as np
 import warnings
 from ..abstract import AbstractModel
@@ -69,7 +69,7 @@ class Normals(AbstractModel):
 
 We also specify the loss function:
 
-```
+```python
 import torch
 
 def loss(x):
@@ -79,9 +79,9 @@ def loss(x):
 
 ## 3.3 Wrapping the agent attribute generator
 
+We wrap this for convenience:
 
-
-```
+```python
 class AgentAttributeDistributionGenerator(SampleGenerator):
     def forward(self, generator_params):
         mu = generator_params
@@ -94,7 +94,7 @@ meta_generator = AgentAttributeDistributionGenerator()
 
 Finally, we specify the domain over which we'd like to find such a $q$, and a method for obtaining $q$, before running the optimisation procedure:
 
-```
+```python
 prior = torch.distributions.Uniform(torch.tensor([-20.]), torch.tensor([20.]))
 
 optimise = Optimise(model=model, meta_generator=meta_generator, prior=prior, loss=loss)
