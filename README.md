@@ -14,7 +14,7 @@ You can view the docs [here](https://github.com/joelnmdyer/synthpop/tree/main/no
 # 3. Example
 
 Consider a population of `N` agents whose states $x_i \sim \mathcal{N}(\mu_i, 1)$, where $\mathcal{N}(\mu, \sigma^2)$ denotes a Normal distribution with mean $\mu$ and variance $\sigma^2$. Consider also generating the agent-level attributes $\mu_i$ from a 
-distribution $\iota_\mu(\mu_i) = \mathcal{N}(\mu, 1)$. We'd like to find a proposal distribution $q$ over the population-level parameter $\mu$ such that the average square $\ell(\mathbf{x}) = \frac{1}{N} \sum_{i=1}^N x_i^2$ of the agent states is small.
+distribution $\iota_\mu = \mathcal{N}(\mu, 1)$. We'd like to find a proposal distribution $q$ over the population-level parameter $\mu$ such that the average square $\ell(\mathbf{x}) = \frac{1}{N} \sum_{i=1}^{N} x_i^2$ of the agent states is small.
 
 # 4. Citation
 
