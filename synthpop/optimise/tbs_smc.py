@@ -24,10 +24,11 @@ class TBS_SMC:
     kde_sample_weights: bool = False
     return_summary: bool = False
 
-def _generate_fitted_meta_generator(meta_generator, samples):
+def _generate_fitted_meta_generator(meta_generator, samples, final_epsilon=None):
     class MetaGenerator(AbstractMetaGenerator):
         def __init__(self, samples):
             self.samples = samples
+            self.final_epsilon = final_epsilon
 
         def __call__(self):
             random_sample = self.samples[np.random.randint(len(self.samples))]
@@ -54,7 +55,7 @@ def tbs_smc(model, meta_generator, loss, prior, parameters, num_workers=-1):
         simulator, prior, num_workers=num_workers, distance=distance
     )
     smcabc_sampler.distance = distance  # bug in SBI?
-    samples = smcabc_sampler(
+    out = smcabc_sampler(
         0.0,
         num_particles=parameters.num_particles,
         num_initial_pop=parameters.num_initial_pop,
@@ -73,4 +74,10 @@ def tbs_smc(model, meta_generator, loss, prior, parameters, num_workers=-1):
         kde_sample_weights=parameters.kde_sample_weights,
         return_summary=parameters.return_summary,
     )
-    return _generate_fitted_meta_generator(meta_generator, samples)
+    if parameters.return_summary:
+        samples = out[0]
+        final_epsilon = out[1]['epsilons'][-1]
+    else:
+        samples = out
+        final_epsilon = None
+    return _generate_fitted_meta_generator(meta_generator, samples, final_epsilon)
