@@ -119,3 +119,19 @@ This package accompanies our [AAMAS 2024](https://www.aamas2024-conference.auckl
   organizer = {23rd International Conference on Autonomous Agents and Multiagent Systems (AAMAS 2024)},
 }
 ```
+
+The supplementary material (that being this GitHub repository and the [paper appendix](https://github.com/joelnmdyer/synthpop/blob/main/appendix.pdf)) can be cited separately from the main paper as:
+
+```
+@software{joel_dyer_2024_10629106,
+  author       = {Joel Dyer and
+                  Arnau Quera-Bofarull},
+  title        = {joelnmdyer/synthpop: AAMAS release},
+  month        = feb,
+  year         = 2024,
+  publisher    = {Zenodo},
+  version      = {v1.0.0},
+  doi          = {10.5281/zenodo.10629106},
+  url          = {https://doi.org/10.5281/zenodo.10629106}
+}
+```
