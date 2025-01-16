@@ -61,10 +61,7 @@ class Sigmoid(nf.flows.Flow):
         log1mz = torch.log(self.max_values - z)
         z = logz - log1mz
         sum_dims = list(range(1, z.dim()))
-        log_det = (
-            - torch.sum(logz, dim=sum_dims)
-            - torch.sum(log1mz, dim=sum_dims)
-        )
+        log_det = (1./logz.exp() + 1./log1mz.exp()).log().sum(dim=sum_dims)
         return z, log_det
 
     def forward(self, z):
